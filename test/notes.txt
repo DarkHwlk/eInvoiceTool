@@ -1,0 +1,15 @@
+GET captcha: 'https://hoadondientu.gdt.gov.vn:30000/captcha'
+==> Response bao gồm:
++ ckey là key của captcha.
++ svg là hình ảnh captcha
+
+Khi đăng nhập
+POST: https://hoadondientu.gdt.gov.vn:30000/security-taxpayer/authenticate
+payload:
+
+    "username":"8578521794",
+    "password":"Hung1912@",
+    "cvalue":"YW5JYK", // Ma captcha người dùng nhập
+    "ckey":"68bda83be41bd96acdf4491c" // captcha_key được get từ server
+}
+

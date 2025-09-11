@@ -1,0 +1,96 @@
+<?xml-stylesheet type='text/xsl' href='20211231083601_0102251531' ?>
+<HDon>
+	<DLHDon Id="DuLieuKy">
+		<TTChung>
+			<PBan>2.0.1</PBan>
+			<THDon>Hóa đơn bán hàng</THDon>
+			<KHMSHDon>2</KHMSHDon>
+			<KHHDon>K25TAA</KHHDon>
+			<SHDon>15832</SHDon>
+			<NLap>2025-03-13</NLap>
+			<HDDCKPTQuan>0</HDDCKPTQuan>
+			<DVTTe>VND</DVTTe>
+			<TGia>1</TGia>
+			<MSTTCGP>0100684378</MSTTCGP>
+		</TTChung>
+		<NDHDon>
+			<NBan>
+				<Ten>BỆNH VIỆN ĐẠI HỌC Y HÀ NỘI</Ten>
+				<MST>0102251531</MST>
+				<DChi>Số 1, Tôn Thất Tùng, Phường Kim Liên, Quận Đống Đa, TP. Hà Nội</DChi>
+				<SDThoai>024.3574.7788</SDThoai>
+			</NBan>
+			<NMua>
+				<DChi>An Hưng, Thành phố Thanh Hóa, Thanh Hóa, Việt Nam</DChi>
+				<MKHang>2503132998</MKHang>
+				<HVTNMHang>ĐẶNG KHÁNH HƯNG</HVTNMHang>
+			</NMua>
+			<DSHHDVu>
+				<HHDVu>
+					<TChat>1</TChat>
+					<STT>1</STT>
+					<THHDVu>Thu tiền các dịch vụ khám chữa bệnh (kèm theo bảng kê chi tiết)</THHDVu>
+					<SLuong></SLuong>
+					<DGia></DGia>
+					<TLCKhau></TLCKhau>
+					<STCKhau></STCKhau>
+					<ThTien>457000</ThTien>
+					<TTKhac>
+						<TTin>
+							<TTruong>Amount</TTruong>
+							<KDLieu>numeric</KDLieu>
+							<DLieu>457000</DLieu>
+						</TTin>
+						<TTin>
+							<TTruong>VATAmount</TTruong>
+							<KDLieu>numeric</KDLieu>
+							<DLieu>0</DLieu>
+						</TTin>
+					</TTKhac>
+				</HHDVu>
+			</DSHHDVu>
+			<TToan>
+				<TgTTTBSo>457000</TgTTTBSo>
+				<TgTTTBChu>Bốn trăm năm mươi bảy nghìn đồng chẵn</TgTTTBChu>
+			</TToan>
+		</NDHDon>
+	</DLHDon>
+	<DSCKS>
+		<NBan>
+			<Signature Id="Signature-bf40eccb08fc40758c46657d3c4ff8ab"
+				xmlns="http://www.w3.org/2000/09/xmldsig#">
+				<SignedInfo>
+					<CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+					<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+					<Reference URI="#DuLieuKy">
+						<Transforms>
+							<Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+						</Transforms>
+						<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+						<DigestValue>HenpVwaxxmQUS2GEFKI2cnr2lxk=</DigestValue>
+					</Reference>
+					<Reference URI="#SigningTime-7414e8efd5384b62bb73535cd3481b35">
+						<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+						<DigestValue>WO1aa4jJkfz7luJ86KexwnDlxiY=</DigestValue>
+					</Reference>
+				</SignedInfo>
+				<SignatureValue>MjpaXVR1PXmV6ZXAYXK6SrYIf9tmtBkwweCFmzHTpcSuBH7Ayh4D8UIXuCrBiTJUVN/LsOAXnskP20KFT9ZavrydGeO5lHyiO3XoMc1v0+u10UyFrl8204btC8Mpe5RNXVrU5cOpbKsBIGW5Yc3TncwDc4w3zOuMVIOjk0zcnDSdkkEG6C/XEerDkh/4mAiBzOmvnNIAYD8Yc5ksqB+pBWRsYufcMZw8YojmGetDYTmm7guMsYm6kBkB+YGOFAW9g+IUI0DvBHZzrNg2YwUWivEcjrktFL10LB75TjXl/HL7TVHYhKKVWUo7mWuBwlGQk6USWl00ygDufnVQdZro9w==</SignatureValue>
+				<KeyInfo>
+					<X509Data>
+						<X509SubjectName>OID.0.9.2342.19200300.100.1.1=MST:0102251531, CN=BỆNH VIỆN ĐẠI HỌC Y HÀ NỘI, O=BỆNH VIỆN ĐẠI HỌC Y HÀ NỘI, L=Quận Đống Đa, S=HÀ NỘI, C=VN</X509SubjectName>
+						<X509Certificate>MIIFeDCCBGCgAwIBAgIQVAEBAUcgaYWfKxBr2ZKlejANBgkqhkiG9w0BAQsFADBcMQswCQYDVQQGEwJWTjEzMDEGA1UECgwqVklFVE5BTSBQT1NUUyBBTkQgVEVMRUNPTU1VTklDQVRJT05TIEdST1VQMRgwFgYDVQQDDA9WTlBULUNBIFNIQS0yNTYwHhcNMjQwNTIyMDE0NzAwWhcNMjUwNTMxMDgwMjAwWjCBwDELMAkGA1UEBhMCVk4xEjAQBgNVBAgMCUjDgCBO4buYSTEbMBkGA1UEBwwSUXXhuq1uIMSQ4buRbmcgxJBhMS8wLQYDVQQKDCZC4buGTkggVknhu4ZOIMSQ4bqgSSBI4buMQyBZIEjDgCBO4buYSTEvMC0GA1UEAwwmQuG7hk5IIFZJ4buGTiDEkOG6oEkgSOG7jEMgWSBIw4AgTuG7mEkxHjAcBgoJkiaJk/IsZAEBDA5NU1Q6MDEwMjI1MTUzMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMb/cFxh1rPtSwPEXM+w3haWmmzP38C2EDJlj67iIQtBAGWVNfxFyzp7Ue3K7Yq5w6I6dLdeozuSqMwThpDC+VgoxjkcT9yf1l3EPUsjd0t1IX5YdiyMNfqT1CrWY0Lu4e9cVVmxrqKoYz/N3f5JZiT3A+l2abSCK02rE0ymrBN5o6+gTQCdaYk3NxRN9isu88r5ULi9FpiixEnqZ7E/LTqd8X1Ry13AoKA4p859Y2jDWoBPYALbdOioy9VldBH7hME1fdpxHmJ0M7/cnrUM2CF3PnUQBN/+za14JwbFIYqDrde8K5KVYL6q2x3c54HLY+qG72NWlM2KWwGhFVqyMzsCAwEAAaOCAc8wggHLMH4GCCsGAQUFBwEBBHIwcDA5BggrBgEFBQcwAoYtaHR0cDovL3B1Yi52bnB0LWNhLnZuL2NlcnRzL3ZucHRjYS1zaGEyNTYuY2VyMDMGCCsGAQUFBzABhidodHRwOi8vb2NzcC1zaGEyNTYudm5wdC1jYS52bi9yZXNwb25kZXIwHQYDVR0OBBYEFATsKgqUmN4cOM/5TCZ4lJt6OXCKMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUtk1ra9amnTTtMjnsQlSsvjJj2HEwawYDVR0gBGQwYjBgBg0rBgEEAYHtAwEBAwEFME8wJgYIKwYBBQUHAgIwGh4YAEQASQBEAC0AQgAyAC4AMAAtADMANgBtMCUGCCsGAQUFBwIBFhlodHRwOi8vcHViLnZucHQtY2Eudm4vcnBhMD8GA1UdHwQ4MDYwNKAyoDCGLmh0dHA6Ly9jcmwtc2hhMjU2LnZucHQtY2Eudm4vdm5wdGNhLXNoYTI1Ni5jcmwwDgYDVR0PAQH/BAQDAgTwMB8GA1UdJQQYMBYGCCsGAQUFBwMCBgorBgEEAYI3CgMMMBwGA1UdEQQVMBOBEWhhaHQyNzlAZ21haWwuY29tMA0GCSqGSIb3DQEBCwUAA4IBAQC98UXXIgfmXHK8rvvwCPP7Yz/86z9n/cUviMihp+zBBZjd3pFpcDs24/Po62up+7OFT1A3ojQTOdSZxTpfYtMtGQsuYT1T8HPhwf7Y3yEBThu0Kl/XhtSESgO4K7Z/LcrCaDvAL0uZ5+rRwDalyM8dehUIhvPxO1bC3kHMQO/wK9C0FrJbDO1Tl3zpJT6sFsKz/TrGOpe/ZCpuvT90fZ0JKxVdpsMch8mZGGtYnJv8vxupjWApeEIl1oaIuPBtYgSiP0FR0X4w+tuaeaRVLsndF3h+0zj63/ACfevLtVeqpBTQLhvEoYqVp5AlGpCE3EEi4YXvs0R95Pd4cAoXKaTn</X509Certificate>
+					</X509Data>
+				</KeyInfo>
+				<Object Id="SigningTime-7414e8efd5384b62bb73535cd3481b35">
+					<SignatureProperties
+						xmlns="">
+						<SignatureProperty Target="#Signature-bf40eccb08fc40758c46657d3c4ff8ab">
+							<SigningTime>2025-03-13T15:38:07</SigningTime>
+						</SignatureProperty>
+					</SignatureProperties>
+				</Object>
+			</Signature>
+		</NBan>
+	</DSCKS>
+	<Fkey>1530623</Fkey>
+</HDon>
