@@ -13,3 +13,7 @@ payload:
     "ckey":"68bda83be41bd96acdf4491c" // captcha_key được get từ server
 }
 
+### TODO
+make spliter
+table can copy
+Label out focus

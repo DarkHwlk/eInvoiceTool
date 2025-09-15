@@ -1,8 +1,8 @@
-# TableViewExample
 import sys
 from datetime import datetime
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QVariant
+from PyQt5.QtGui import QFont
 
 import pathlib
 curDir = str(pathlib.Path(__file__).parent.absolute())
@@ -18,17 +18,17 @@ class MainModel(QtCore.QAbstractTableModel):
         value = self._tableData[index.row()][index.column()]
  
         if role == Qt.DisplayRole:
-            #Perform per-type checks and render accordingly.
             if isinstance(value, datetime):
                 return value.strftime("%Y-%m-%d")
             if isinstance(value, float):
-                return "%.2f" % value
-            if isinstance(value, str):
-                return '"%s"' % value
+                return '{:,.2f}'.format(value).replace(',','*').replace('.', ',').replace('*','.')
+            if isinstance(value, int):
+                return '{:,}'.format(value).replace(',','.')
             return value
  
         if role == Qt.BackgroundRole:
-            return QtGui.QColor('lightgray')
+            # return QtGui.QColor('lightgray')
+            pass
  
         if role == Qt.TextAlignmentRole:
             if isinstance(value, int) or isinstance(value, float):
@@ -53,51 +53,20 @@ class MainModel(QtCore.QAbstractTableModel):
  
     def headerData(self, section, orientation, role):
         #section is the index of the column/row.
-        if role == Qt.DisplayRole:
-            if orientation == Qt.Horizontal:
-                return self._header[section]
-                #return str(self._tableData.columns[section])#Use for pandas
-            #if orientation == Qt.Vertical:
-                #return str(self._tableData.index[section]) #Use for pandas
- 
+        if section < len(self._header):
+            if role == Qt.DisplayRole:
+                if orientation == Qt.Horizontal:
+                    return self._header[section]
+                    #return str(self._tableData.columns[section])#Use for pandas
+                if orientation == Qt.Vertical:
+                    pass
+                    #return str(self._tableData.index[section]) #Use for pandas
+            if orientation == Qt.Horizontal and role == Qt.FontRole:
+                # font = QFont()
+                # font.setBold(True)
+                # return font
+                pass
+            return QVariant()
+
     def setHeader(self, header):
         self._header = header
- 
- 
-class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self):
-        super().__init__()
- 
-        self.table = QtWidgets.QTableView()
- 
-        data = [
-            [1,"Khám Nội tiêu hóa","Lần",1,249400,249400,"KCT",0,249400]
-        ]
-        header = ["STT"," Tên hàng hóa, dịch vụ","Đơn vị tính","Số lượng",
-            "Đơn giá","Tiền chưa thuế","% Thuế","Tiền thuế","Thành tiền"]
- 
-        self.model = MainModel(data)
-        self.model.setHeader(header)
-        self.table.setModel(self.model)
- 
-        self.setCentralWidget(self.table)
- 
- 
-app=QtWidgets.QApplication(sys.argv)
-window=MainWindow()
-window.show()
-app.exec_()
- 
-"""
-Model:
-    tableData [][]
-    generalData dict()
- 
-    signal: generalDataChanged(value, depths[])
- 
-View:
-    tableWidget
-    generalWidgets dict()
- 
-    slot: onGeneralDataChanged(value, depths[])
-"""

@@ -8,5 +8,5 @@ class SelectableLabel(QLabel):
         self.setMouseTracking(True)
     
     def mouseMoveEvent(self, event):
-            self.setCursor(Qt.IBeamCursor)
-            super().mouseMoveEvent(event)
+        self.setCursor(Qt.IBeamCursor)
+        super().mouseMoveEvent(event)
