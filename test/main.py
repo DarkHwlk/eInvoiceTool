@@ -1,26 +1,57 @@
+# from PyQt5.QtWidgets import (
+#     QApplication, QWidget, QVBoxLayout, QLabel, QFrame
+# )
+# import sys
+
+# class BorderLayoutDemo(QWidget):
+#     def __init__(self):
+#         super().__init__()
+#         self.setWindowTitle("Layout có border")
+
+#         # Tạo layout bên trong
+#         inner_layout = QVBoxLayout()
+#         inner_layout.addWidget(QLabel("Nội dung bên trong layout"))
+
+#         # Tạo widget bọc layout
+#         container = QFrame()
+#         container.setLayout(inner_layout)
+#         container.setStyleSheet("""
+#             QFrame {
+#                 border-bottom: 2px solid #007ACC;
+#                 padding: 5px;
+#                 background-color: #f0f0f0;
+#             }
+#         """)
+
+#         # Layout chính
+#         main_layout = QVBoxLayout()
+#         main_layout.addWidget(container)
+#         self.setLayout(main_layout)
+
+# if __name__ == "__main__":
+#     app = QApplication(sys.argv)
+#     demo = BorderLayoutDemo()
+#     demo.show()
+#     sys.exit(app.exec_())
+
+
+from PyQt5.QtWidgets import QLabel, QApplication, QWidget, QVBoxLayout, QFrame
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
-from PyQt5.QtCore import Qt
 
-def main_window():
-    # 1. Create a QApplication instance
-    app = QApplication(sys.argv)
+app = QApplication(sys.argv)
 
-    # 2. Create a QMainWindow
-    window = QMainWindow()
-    window.setWindowTitle("My First PyQt5 App")
-    window.setGeometry(100, 100, 400, 200) # x, y, width, height
+main_widget = QWidget()
+main_layout = QVBoxLayout(main_widget)
+main_layout.addWidget(QLabel("Nội dung bên trong layout"))
 
-    # 3. Create a QLabel and set it as the central widget
-    label = QLabel("Hello, PyQt5!", window)
-    label.setAlignment(Qt.AlignCenter) # Center the text
-    window.setCentralWidget(label)
 
-    # 4. Show the window
-    window.show()
+# Tạo QFrame làm border dưới
+bottom_border = QFrame()
+bottom_border.setFrameShape(QFrame.HLine)
+bottom_border.setFrameShadow(QFrame.Sunken)
+bottom_border.setLineWidth(2)
 
-    # 5. Start the application's event loop
-    sys.exit(app.exec_())
+main_layout.addWidget(bottom_border)
 
-if __name__ == '__main__':
-    main_window()
+main_widget.show()
+sys.exit(app.exec_())

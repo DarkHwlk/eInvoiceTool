@@ -1,0 +1,69 @@
+[
+    {
+        "General": {
+            "NBan": {
+                "Ten": "CÔNG TY TNHH BỆNH VIỆN ĐKTN AN SINH - PHÚC TRƯỜNG MINH",
+                "MST": "0106793535",
+                "DChi": "Số 8 đường Châu Văn Liêm, Phường Từ Liêm, Thành phố Hà Nội, Việt Nam"
+            },
+            "NMua": {
+                "DChi": "129 Nguyễn Trãi,  Phường Khương Đình, Thành phố Hà Nội",
+                "HVTNMHang": "Đặng Khánh Hưng (03820000621)"
+            },
+            "TToan": {
+                "LTSuat": {
+                    "TSuat": "KCT",
+                    "ThTien": "407000",
+                    "TThue": "0"
+                },
+                "THTTLTSuat": null,
+                "TgTCThue": "407000",
+                "TgTThue": "0",
+                "TTCKTMai": "0",
+                "TgTTTBSo": "407000",
+                "TgTTTBChu": "Bốn trăm lẻ bảy nghìn đồng chẵn./."
+            },
+            "DSCKS": {
+                "NBan": "<Element \"NBan\" at 0x000001F6A8D8B010>",
+                "NMua": "<Element \"NMua\" at 0x000001F6A8D8BBF0>",
+                "CCKSKhac": "<Element \"CCKSKhac\" at 0x000001F6A8D8BC40>"
+            },
+            "XmlPath": "E:/Hwng/Projects/Invoice Tool/data/K25TTM-00218251-UKVF96OM2K5-DPH.xml"
+        },
+        "Table": [
+            [
+                "1",
+                "Khám Nội tiêu hóa",
+                "Lần",
+                "1",
+                "249400",
+                249400,
+                0,
+                0,
+                "249400"
+            ],
+            [
+                "2",
+                "Đo hoạt độ AST (GOT)",
+                "Lần",
+                "1",
+                "90000",
+                90000,
+                0,
+                0,
+                "90000"
+            ],
+            [
+                "3",
+                "Đo hoạt độ ALT (GPT)",
+                "Lần",
+                "1",
+                "67600",
+                67600,
+                0,
+                0,
+                "67600"
+            ]
+        ]
+    }
+]

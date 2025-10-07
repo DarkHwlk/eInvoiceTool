@@ -1,22 +1,33 @@
 import sys
+import pandas as pd
+import numpy as np
 from datetime import datetime
+
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QVariant
+from PyQt5.QtCore import Qt, QVariant, pyqtSignal
 from PyQt5.QtGui import QFont
+
+from Utils.Constant  import *
+from Utils.DataTypes  import Data
+from Utils.Helper  import extractKeyPathsValue
 
 import pathlib
 curDir = str(pathlib.Path(__file__).parent.absolute())
  
 class MainModel(QtCore.QAbstractTableModel):
-    def __init__(self, tableData, generalData = dict()):
+    def __init__(self, tableData = list(), generalData = dict()):
         super().__init__()
-        self._tableData = tableData
-        self._generalData = generalData
-        self._header = list()
+        self.__tableData = pd.DataFrame(tableData, columns = TABLE_HEADER)
+        self.__generalData = generalData
+        """
+            data = [{"Table": list, "General": dict},...]
+        """
+        self.__data = list()
+        self.__totalPage = 0
+        self.__currentPage = 0
  
     def data(self, index, role):
-        value = self._tableData[index.row()][index.column()]
- 
+        value = self.__tableData.iloc[index.row(), index.column()]
         if role == Qt.DisplayRole:
             if isinstance(value, datetime):
                 return value.strftime("%Y-%m-%d")
@@ -24,7 +35,9 @@ class MainModel(QtCore.QAbstractTableModel):
                 return '{:,.2f}'.format(value).replace(',','*').replace('.', ',').replace('*','.')
             if isinstance(value, int):
                 return '{:,}'.format(value).replace(',','.')
-            return value
+            if isinstance(value, np.int64):
+                return '{:,}'.format(int(value)).replace(',','.')
+            return str(value)
  
         if role == Qt.BackgroundRole:
             # return QtGui.QColor('lightgray')
@@ -46,27 +59,64 @@ class MainModel(QtCore.QAbstractTableModel):
             return 
  
     def rowCount(self, index):
-        return len(self._tableData)
+        return len(self.__tableData)
  
     def columnCount(self, index):
-        return len(self._tableData[0])
+        return len(self.__tableData.columns)
  
     def headerData(self, section, orientation, role):
-        #section is the index of the column/row.
-        if section < len(self._header):
+        # ection is the index of the column/row.
+        if section < len(self.__tableData.columns):
             if role == Qt.DisplayRole:
                 if orientation == Qt.Horizontal:
-                    return self._header[section]
-                    #return str(self._tableData.columns[section])#Use for pandas
-                if orientation == Qt.Vertical:
-                    pass
-                    #return str(self._tableData.index[section]) #Use for pandas
+                    return self.__tableData.columns[section]
+                    #return str(self.__tableData.columns[section])#Use for pandas
             if orientation == Qt.Horizontal and role == Qt.FontRole:
                 # font = QFont()
                 # font.setBold(True)
                 # return font
                 pass
             return QVariant()
+    
+    def setData(self, data: list):
+        self.__totalPage = len(data)
+        self.__currentPage = 0
+        self.__data = data
+        self.setGeneralData(self.__data[self.__currentPage]["General"])
+        self.setTableData(self.__data[self.__currentPage]["Table"])
+    
+    def setTableData(self, data: list):
+        self.beginResetModel()
+        self.__tableData = pd.DataFrame(data, columns = TABLE_HEADER)
+        self.endResetModel()
+    
+    def setGeneralData(self, data, key_path = []):
+        if key_path == [] and isinstance(data, dict):
+            self.__generalData = data
+            paths = extractKeyPathsValue(data)
+            print(paths)
+            for path, value in paths:
+                # Trigger signals
+                print(path, value)
+                self.generalDataUpdated.emit(value, path)
+            return
 
-    def setHeader(self, header):
-        self._header = header
+        current = self.__generalData
+        for key in key_path[:-1]:
+            if key not in current or not isinstance(current[key], dict):
+                current[key] = {}
+            current = current[key]
+        current[key_path[-1]] = data
+        # Trigger signal
+        self.generalDataUpdated.emit(data, key_path)
+
+    def getGeneralData(self, key_path = []):
+        if key_path == []:
+            return self.__generalData
+
+        current = self.__generalData
+        for key in key_path:
+            current = current[key]
+        return current
+
+    generalDataUpdated = pyqtSignal(object, list)
