@@ -44,6 +44,9 @@ class MainController(QObject):
             
         elif action == Action.NEXT_PAGE:
             self.__nextPage()
+            
+        elif action == Action.SET_CURRENT_PAGE:
+            self.__setCurrentPage(message[Action.page])
 
     def __openXmlFiles(self, files):
         logging.info(f"files: {files}")
@@ -65,3 +68,12 @@ class MainController(QObject):
         if self._model.currentPage() < self._model.totalPage() - 1:
             self._model.setCurrentPage(self._model.currentPage() + 1)
             logging.info(f"Next page: {self._model.currentPage()}")
+
+    def __setCurrentPage(self, page):
+        if not page.isdigit():
+            return
+        page = int(page)
+        if page < 1 or page > self._model.totalPage():
+            return
+        self._model.setCurrentPage(page - 1)
+        logging.info(f"Set current page: {self._model.currentPage()}")

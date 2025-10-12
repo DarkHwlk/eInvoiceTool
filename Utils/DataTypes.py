@@ -15,9 +15,11 @@ class Action:
     OPEN_XML_FILE = "OPEN_XML_FILE"
     PREV_PAGE = "PREV_PAGE"
     NEXT_PAGE = "NEXT_PAGE"
+    SET_CURRENT_PAGE = "SET_CURRENT_PAGE"
 
     # Message type
     file = "file"
+    page = "page"
 
 class ActionMessage(object):
     def __new__(self, action, message=dict()):

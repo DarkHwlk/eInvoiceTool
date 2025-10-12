@@ -248,8 +248,10 @@ class MainWidget(QWidget, IView):
             "2025-09-17",
             False)
         # Chu ky so
-        self._generalWidgets["CurrentPage"] = AdjustableLineEdit("", self)
-        self._generalWidgets["TotalPage"] = QLabel("", self)
+        self._generalWidgets["CurrentPage"] = AdjustableLineEdit("0", self)
+        self._generalWidgets["CurrentPage"].editingFinished.connect(
+            self.onCurrentPageEditingFinished)
+        self._generalWidgets["TotalPage"] = QLabel("0", self)
 
     def _initButtons(self):
         # Page control
@@ -286,3 +288,13 @@ class MainWidget(QWidget, IView):
 
     def onNextPageClicked(self):
         self._controller.triggerAction(ActionMessage(Action.EXPORT_ALL_EXCEL))
+
+    def onCurrentPageEditingFinished(self):
+        if (not self._generalWidgets["CurrentPage"].isModified()):
+            return
+        self._generalWidgets["CurrentPage"].setModified(False)
+        self._controller.triggerAction(
+            ActionMessage(
+                Action.SET_CURRENT_PAGE, 
+                {Action.page: self._generalWidgets["CurrentPage"].text()}
+            ))
