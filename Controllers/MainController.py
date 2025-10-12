@@ -31,25 +31,37 @@ class MainController(QObject):
         message = data[Action.message]
         logging.info(f"Action: {action} | Message: {message}")
         if action == Action.OPEN_XML_FILE:
-            self.__openXmlFile(message[Action.file])
+            self.__openXmlFiles(message[Action.file])
         
         elif action == Action.EXPORT_ONE_EXCEL:
             self.__exportExcelFile()
         
         elif action == Action.EXPORT_ALL_EXCEL:
             self.__exportExcelFile(isAll=True)
+            
+        elif action == Action.PREV_PAGE:
+            self.__prevPage()
+            
+        elif action == Action.NEXT_PAGE:
+            self.__nextPage()
 
-    def __openXmlFile(self, file):
-        logging.info(f"file: {file}")
-        self.__readXmlFile(file)
+    def __openXmlFiles(self, files):
+        logging.info(f"files: {files}")
+        data = XmlReader().readFiles(files, self.__onReadXmlFilesFinished)
         
     def __exportExcelFile(self, isAll=False):
         logging.info(f"isAll: {isAll}")
-
-    def __readXmlFile(self, file):
-        logging.info(f"file: {file}")
-        data = XmlReader().readFiles([file], self.__onReadXmlFileFinished)
     
-    def __onReadXmlFileFinished(self, data):
+    def __onReadXmlFilesFinished(self, data):
         logging.debug(f"data: {data}")
         self._model.setData(data)
+
+    def __prevPage(self):
+        if self._model.currentPage() > 0:
+            self._model.setCurrentPage(self._model.currentPage() - 1)
+            logging.info(f"Prev page: {self._model.currentPage()}")
+
+    def __nextPage(self):
+        if self._model.currentPage() < self._model.totalPage() - 1:
+            self._model.setCurrentPage(self._model.currentPage() + 1)
+            logging.info(f"Next page: {self._model.currentPage()}")

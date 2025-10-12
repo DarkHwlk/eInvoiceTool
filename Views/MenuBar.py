@@ -21,13 +21,13 @@ class MenuBar(QMenuBar):
         self._controller = controller
     
     def openXmlFileDialog(self):
-        fileName, selectedFilter = QFileDialog.getOpenFileName(self, caption='Open File', filter='Xml Files (*.xml)')
-        if fileName:
-            logging.info(f"MenuBar::openXmlFileDialog file: {fileName}")
+        files, selectedFilter = QFileDialog.getOpenFileNames(self, caption='Open File', filter='Xml Files (*.xml)')
+        if files:
+            logging.info(f"MenuBar::openXmlFileDialog file: {files}")
             self._controller.triggerAction(
                 ActionMessage(
                     Action.OPEN_XML_FILE,
                     {
-                        Action.file: fileName
+                        Action.file: files
                     }
             ))

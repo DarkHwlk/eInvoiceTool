@@ -248,8 +248,8 @@ class MainWidget(QWidget, IView):
             "2025-09-17",
             False)
         # Chu ky so
-        self._generalWidgets["CurrentPage"] = AdjustableLineEdit("1", self)
-        self._generalWidgets["TotalPage"] = QLabel(" / 32", self)
+        self._generalWidgets["CurrentPage"] = AdjustableLineEdit("", self)
+        self._generalWidgets["TotalPage"] = QLabel("", self)
 
     def _initButtons(self):
         # Page control

@@ -79,11 +79,9 @@ class MainModel(QtCore.QAbstractTableModel):
             return QVariant()
     
     def setData(self, data: list):
-        self.__totalPage = len(data)
-        self.__currentPage = 0
         self.__data = data
-        self.setGeneralData(self.__data[self.__currentPage]["General"])
-        self.setTableData(self.__data[self.__currentPage]["Table"])
+        self.setTotalPage(len(data))
+        self.setCurrentPage(0)
     
     def setTableData(self, data: list):
         self.beginResetModel()
@@ -118,5 +116,27 @@ class MainModel(QtCore.QAbstractTableModel):
         for key in key_path:
             current = current[key]
         return current
+    
+    def setCurrentPage(self, page: int):
+        if page < 0 or page >= self.__totalPage:
+            return
+        self.__currentPage = page
+        self.setGeneralData(self.__data[self.__currentPage]["General"])
+        self.setTableData(self.__data[self.__currentPage]["Table"])
+        self.currentPageUpdated.emit(self.__currentPage)
+    
+    def currentPage(self):
+        return self.__currentPage
+
+    def setTotalPage(self, total: int):
+        if total < 0:
+            return
+        self.__totalPage = total
+        self.totalPageUpdated.emit(self.__totalPage)
+
+    def totalPage(self):
+        return self.__totalPage
 
     generalDataUpdated = pyqtSignal(object, list)
+    currentPageUpdated = pyqtSignal(int)
+    totalPageUpdated = pyqtSignal(int)

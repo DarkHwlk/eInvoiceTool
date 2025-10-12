@@ -18,6 +18,10 @@ class IView(QObject):
         self._tableWidget.setModel(self._model)
         self._model.generalDataUpdated.connect(
             self.onGeneralDataUpdated)
+        self._model.currentPageUpdated.connect(
+            self.onCurrentPageUpdated)
+        self._model.totalPageUpdated.connect(
+            self.onTotalPageUpdated)
     
     def setController(self, controller):
         logging.debug("")
@@ -41,3 +45,9 @@ class IView(QObject):
         
             if isinstance(widget, QLabel) or isinstance(widget, QLineEdit):
                 widget.setText(data)
+
+    def onCurrentPageUpdated(self, page):
+        self._generalWidgets["CurrentPage"].setText(str(page + 1))
+
+    def onTotalPageUpdated(self, total):
+        self._generalWidgets["TotalPage"].setText(f" / {str(total)}")
