@@ -251,7 +251,7 @@ class MainWidget(QWidget, IView):
         self._generalWidgets["CurrentPage"] = AdjustableLineEdit("0", self)
         self._generalWidgets["CurrentPage"].editingFinished.connect(
             self.onCurrentPageEditingFinished)
-        self._generalWidgets["TotalPage"] = QLabel("0", self)
+        self._generalWidgets["TotalPage"] = QLabel("/ 0", self)
 
     def _initButtons(self):
         # Page control
@@ -259,10 +259,12 @@ class MainWidget(QWidget, IView):
         self._buttons[Action.PREV_PAGE].setFixedSize(32, 32)
         self._buttons[Action.PREV_PAGE].clicked.connect(
             lambda: self._controller.triggerAction(ActionMessage(Action.PREV_PAGE)))
+        self._buttons[Action.PREV_PAGE].setEnabled(False)
         self._buttons[Action.NEXT_PAGE] = QPushButton(">",self)
         self._buttons[Action.NEXT_PAGE].setFixedSize(32, 32)
         self._buttons[Action.NEXT_PAGE].clicked.connect(
             lambda: self._controller.triggerAction(ActionMessage(Action.NEXT_PAGE)))
+        self._buttons[Action.NEXT_PAGE].setEnabled(False)
         # Export one file excel
         self._buttons[Action.EXPORT_ONE_EXCEL] = IconButton(ICON_ONE_EXCEL_PATH, "Xuất 1 HĐ ra Excel", self)
         self._buttons[Action.EXPORT_ONE_EXCEL].clicked.connect(lambda x: self.onExportExcelClicked(isAll=False))
@@ -298,3 +300,22 @@ class MainWidget(QWidget, IView):
                 Action.SET_CURRENT_PAGE, 
                 {Action.page: self._generalWidgets["CurrentPage"].text()}
             ))
+
+    def onCurrentPageUpdated(self, page):
+        super().onCurrentPageUpdated(page)
+        if page == self._model.totalPage() - 1:
+            self._buttons[Action.NEXT_PAGE].setEnabled(False)
+            self._buttons[Action.PREV_PAGE].setEnabled(True)
+        elif page == 0:
+            self._buttons[Action.NEXT_PAGE].setEnabled(True)
+            self._buttons[Action.PREV_PAGE].setEnabled(False)
+        else:
+            self._buttons[Action.NEXT_PAGE].setEnabled(True)
+            self._buttons[Action.PREV_PAGE].setEnabled(True)
+
+    def onTotalPageUpdated(self, total):
+        super().onTotalPageUpdated(total)
+        self._generalWidgets["TotalPage"].setText(f" / {str(total)}")
+        if total <= 1:
+            self._buttons[Action.PREV_PAGE].setEnabled(False)
+            self._buttons[Action.NEXT_PAGE].setEnabled(False)
