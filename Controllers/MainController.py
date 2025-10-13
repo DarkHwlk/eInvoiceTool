@@ -1,17 +1,21 @@
 import logging
 
 from PyQt5.QtCore import (QObject, pyqtSignal)
+from PyQt5.QtWidgets import QMessageBox
 
 from Views.IView import IView
 from Utils.DataTypes  import Action, ActionMessage
 from Utils.XmlReader import XmlReader
 from Utils.Helper import runThread
+from Utils.MainThreadInvoker import MainThreadInvoker
 
 class MainController(QObject):
     def __init__(self, parent):
         super().__init__(parent)
         self._model = None
         self._view = None
+        # init MainThreadInvoker
+        MainThreadInvoker()
 
     def setModel(self, model):
         logging.debug("")
@@ -70,10 +74,24 @@ class MainController(QObject):
             logging.info(f"Next page: {self._model.currentPage()}")
 
     def __setCurrentPage(self, page):
+        logging.info(f"page: {page}")
         if not page.isdigit():
+            MainThreadInvoker().run(
+                lambda:QMessageBox.warning(
+                self._view, "Lỗi", "Vui lòng nhập số trang hợp lệ!")
+            )
+            return
+        if self._model.totalPage() == 0:
+            MainThreadInvoker().run(
+                lambda:QMessageBox.warning(
+                self._view, "Lỗi", "Chưa có dữ liệu!")
+            )
             return
         page = int(page)
         if page < 1 or page > self._model.totalPage():
+            MainThreadInvoker().run(
+                lambda:QMessageBox.warning(
+                self._view, "Lỗi", f"Vui lòng nhập số trang từ 1 đến {self._model.totalPage()}!")
+            )
             return
         self._model.setCurrentPage(page - 1)
-        logging.info(f"Set current page: {self._model.currentPage()}")

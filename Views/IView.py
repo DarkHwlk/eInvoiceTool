@@ -50,4 +50,4 @@ class IView(QObject):
         self._generalWidgets["CurrentPage"].setText(str(page + 1))
 
     def onTotalPageUpdated(self, total):
-        self._generalWidgets["TotalPage"].setText(f" / {str(total)}")
+        self._generalWidgets["TotalPage"].setText(f"/ {str(total)}")
