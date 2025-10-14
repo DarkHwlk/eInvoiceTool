@@ -29,9 +29,10 @@ class XmlReader(QObject):
                 self.__readFinishedCallback = None
  
     def __readFile(self, path):
+        # try:
         tree = ET.parse(path)
         root = tree.getroot()
- 
+
         """ General Data """
         generalData = dict()
         generalData["NBan"] = dict()
@@ -60,7 +61,7 @@ class XmlReader(QObject):
         DSCKS = root.find("DSCKS")
         for child in DSCKS:
             generalData["DSCKS"][child.tag] = child
- 
+
         """ Table Data """
         tableData = list()
         #DSHHDVu
@@ -76,8 +77,11 @@ class XmlReader(QObject):
                         rowData[col.tag] = 0
                 else:
                     rowData[col.tag] = col.text
+                # TSuat
                 if col.tag == 'TSuat' and col.text == 'KCT':
-                    rowData[col.tag] = 0
+                    rowData['TSuat'] = 0
+                elif col.tag == 'TSuat':
+                    rowData['TSuat'] = int(col.text[:-1])
             row = list()
             for tag in TABLE_HEADER_TAG:
                 if tag in rowData:
@@ -95,9 +99,12 @@ class XmlReader(QObject):
                         rowData[tag] = tmp
                 row.append(tmp)
             tableData.append(row)
- 
+
         logging.debug(f"General: {generalData}")
         logging.debug(f"Table: {tableData}")
         data = {"General": generalData, "Table": tableData}
         return data
+        # except Exception as e:
+        #     logging.error(f"Error when read xml file: {path} | error: {e}")
+        #     return {"General": dict(), "Table": list()}
 

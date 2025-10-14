@@ -2,6 +2,7 @@ import sys
 import pandas as pd
 import numpy as np
 from datetime import datetime
+import logging
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QVariant, pyqtSignal
@@ -84,19 +85,16 @@ class MainModel(QtCore.QAbstractTableModel):
         self.setCurrentPage(0)
     
     def setTableData(self, data: list):
+        logging.debug(f"data: {data}")
         self.beginResetModel()
         self.__tableData = pd.DataFrame(data, columns = TABLE_HEADER)
         self.endResetModel()
     
     def setGeneralData(self, data, key_path = []):
         if key_path == [] and isinstance(data, dict):
-            self.__generalData = data
-            paths = extractKeyPathsValue(data)
-            print(paths)
-            for path, value in paths:
-                # Trigger signals
-                print(path, value)
-                self.generalDataUpdated.emit(value, path)
+            # reset all general data
+            logging.debug("Reset all general data")
+            self.__resetGeneralData(data)
             return
 
         current = self.__generalData
@@ -116,6 +114,25 @@ class MainModel(QtCore.QAbstractTableModel):
         for key in key_path:
             current = current[key]
         return current
+    
+    def __resetGeneralData(self, data: dict):
+        logging.debug("")
+        self.__clearGeneralData()
+        self.__generalData = data
+        paths = extractKeyPathsValue(data)
+        logging.debug(paths)
+        for path, value in paths:
+            # Trigger signals
+            logging.debug(path, value)
+            self.generalDataUpdated.emit(value, path)
+
+    def __clearGeneralData(self):
+        logging.debug("")
+        paths = extractKeyPathsValue(self.__generalData)
+        for path, value in paths:
+            # Trigger signals
+            logging.debug(path, value)
+            self.generalDataUpdated.emit("", path)
     
     def setCurrentPage(self, page: int):
         if page < 0 or page >= self.__totalPage:

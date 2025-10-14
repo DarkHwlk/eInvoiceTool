@@ -34,11 +34,11 @@ class IView(QObject):
         current = self._generalWidgets
         for key in key_path[:-1]:
             if key not in current or not isinstance(current[key], dict):
-                logging.warn(f"No element have path: {key_path}")
+                logging.debug(f"No element have path: {key_path}")
                 return 
             current = current[key]
         if key_path[-1] not in current:
-            logging.warn(f"No element have path: {key_path}")
+            logging.debug(f"No element have path: {key_path}")
             return
         else:
             widget = current[key_path[-1]]

@@ -24,5 +24,3 @@ class LoadingDialog(QProgressDialog):
     def setValue(self, value):
         super().setValue(value)
         self.setLabelText(self.labelText + f" ({self.value()}/{self.maximum()})")
-        # if self.value() >= self.maximum():
-        #     self.close()
