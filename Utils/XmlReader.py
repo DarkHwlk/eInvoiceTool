@@ -35,11 +35,21 @@ class XmlReader(QObject):
 
         """ General Data """
         generalData = dict()
+        generalData["TTChung"] = dict()
         generalData["NBan"] = dict()
         generalData["NMua"] = dict()
         generalData["TToan"] = dict()
         generalData["DSCKS"] = dict()
         generalData["XmlFilePath"] = path
+        #TTChung
+        TTChung = root.find("DLHDon").find("TTChung")
+        for child in TTChung:
+            if child.tag == "KHHDon":
+                generalData["TTChung"]["KHHDon"] = generalData["TTChung"]["KHMSHDon"] + child.text
+            elif child.tag == "SHDon":
+                generalData["TTChung"]["SHDon"] = str(int(child.text)).zfill(8)
+            else:
+                generalData["TTChung"][child.tag] = child.text
         #NBan
         NBan = root.find("DLHDon").find("NDHDon").find("NBan")
         for child in NBan:
@@ -100,7 +110,7 @@ class XmlReader(QObject):
                 row.append(tmp)
             tableData.append(row)
 
-        logging.debug(f"General: {generalData}")
+        logging.info(f"General: {generalData}")
         logging.debug(f"Table: {tableData}")
         data = {"General": generalData, "Table": tableData}
         return data
