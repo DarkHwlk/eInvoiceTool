@@ -139,13 +139,13 @@ class MainWidget(QWidget, IView):
         # Chu ki so nguoi ban
         layoutBuilder = VLayoutBuilder()
         rightComponents.append(layoutBuilder
-            .addWidget(QLabel("Người bán hàng:", self), color=LABEL_TITLE_COLOR)
+            .addWidget(QLabel("Chữ ký bên bán hàng:", self), color=LABEL_TITLE_COLOR)
             .addWidget(self._generalWidgets["DSCKS"]["NBan"])
             .build())
         # Chu ki so nguoi mua
         layoutBuilder = VLayoutBuilder()
         rightComponents.append(layoutBuilder
-            .addWidget(QLabel("Người mua hàng:", self), color=LABEL_TITLE_COLOR)
+            .addWidget(QLabel("Chữ ký bên mua hàng:", self), color=LABEL_TITLE_COLOR)
             .addWidget(self._generalWidgets["DSCKS"]["NMua"])
             .build())
         # Init buttons
@@ -239,14 +239,8 @@ class MainWidget(QWidget, IView):
         self._generalWidgets["XmlFilePath"].setStyleSheet("QLineEdit[readOnly=\"true\"] { color: #000000; background-color: #F0F0F0; }")
         # Chu ky so
         self._generalWidgets["DSCKS"] = dict()
-        self._generalWidgets["DSCKS"]["NBan"] = DigitalSignatureWidget(self,
-            "CÔNG TY TNHH BỆNH VIỆN ĐKTN AN SINH - PHÚC TRƯỜNG MINH",
-            "2025-09-06",
-            True)
-        self._generalWidgets["DSCKS"]["NMua"] = DigitalSignatureWidget(self,
-            "CÔNG TY Invoice Tool",
-            "2025-09-17",
-            False)
+        self._generalWidgets["DSCKS"]["NBan"] = DigitalSignatureWidget(self)
+        self._generalWidgets["DSCKS"]["NMua"] = DigitalSignatureWidget(self)
         # Chu ky so
         self._generalWidgets["CurrentPage"] = AdjustableLineEdit("0", self)
         self._generalWidgets["CurrentPage"].editingFinished.connect(

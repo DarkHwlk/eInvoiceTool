@@ -5,6 +5,7 @@ import logging
 from PyQt5.QtCore import (QObject, pyqtSignal)
 from Utils.Helper import singleton, runThread
 from Utils.Constant  import *
+from Utils.SignatureVerifier  import verify_xml_signature
 
 @singleton
 class XmlReader(QObject):
@@ -34,6 +35,28 @@ class XmlReader(QObject):
         root = tree.getroot()
 
         """ General Data """
+        generalData = self.__getGeneralData(root, path)
+
+        """ Table Data """
+        tableData = self.__getTableData(root)
+
+        """ Signature Data """
+        signatureData = verify_xml_signature(path)
+
+        logging.debug(f"General: {generalData}")
+        logging.debug(f"Table: {tableData}")
+        logging.info(f"Signature: {signatureData}")
+        data = {
+            "General": generalData,
+            "Table": tableData,
+            "Signature": signatureData
+        }
+        return data
+        # except Exception as e:
+        #     logging.error(f"Error when read xml file: {path} | error: {e}")
+        #     return {"General": dict(), "Table": list()}
+
+    def __getGeneralData(self, root, path):
         generalData = dict()
         generalData["TTChung"] = dict()
         generalData["NBan"] = dict()
@@ -72,7 +95,9 @@ class XmlReader(QObject):
         for child in DSCKS:
             generalData["DSCKS"][child.tag] = child
 
-        """ Table Data """
+        return generalData
+
+    def __getTableData(self, root):
         tableData = list()
         #DSHHDVu
         DSHHDVu = root.find("DLHDon").find("NDHDon").find("DSHHDVu")
@@ -110,11 +135,4 @@ class XmlReader(QObject):
                 row.append(tmp)
             tableData.append(row)
 
-        logging.info(f"General: {generalData}")
-        logging.debug(f"Table: {tableData}")
-        data = {"General": generalData, "Table": tableData}
-        return data
-        # except Exception as e:
-        #     logging.error(f"Error when read xml file: {path} | error: {e}")
-        #     return {"General": dict(), "Table": list()}
-
+        return tableData

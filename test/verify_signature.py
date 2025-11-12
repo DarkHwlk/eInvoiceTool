@@ -6,8 +6,10 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.x509 import load_der_x509_certificate
 from cryptography.hazmat.backends import default_backend
  
+HOADON_PATH = r"E:\Hwng\Projects\Invoice Tool\test\hoa_don.xml"
+
 #Đọc file XML hóa đơn
-with open(r"E:\Hwng\Projects\Invoice Tool\test\hoa_don.xml", "r", encoding="utf-8") as f:
+with open(HOADON_PATH, "r", encoding="utf-8") as f:
     xml_data = f.read()
  
 #Namespace chữ ký số

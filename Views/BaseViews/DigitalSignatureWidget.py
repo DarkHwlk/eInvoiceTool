@@ -17,6 +17,11 @@ class DigitalSignatureWidget(QWidget):
         self.setIsValid(isValid)
         self.initUI()
     
+    def setData(self, name, date, isValid):
+        self.setName(name)
+        self.setDate(date)
+        self.setIsValid(isValid)
+
     def setDate(self, date):
         self._dateLabel.setText(f"Ký ngày: {date}")
 
@@ -29,6 +34,8 @@ class DigitalSignatureWidget(QWidget):
             self._bgColor = "#dff0d8"
         else:
             self._bgColor = "#f8a5c2"
+        if self._nameLabel.text() == "":
+            self._bgColor = "#ffffff"
         self.setStyleSheet(
             f"background-color: {self._bgColor};"
             # f"background-image: url({ICON_OK_PATH}); "
@@ -43,3 +50,4 @@ class DigitalSignatureWidget(QWidget):
         vLayout = layoutBuilder.build()
         self.setLayout(vLayout)
         self.setAttribute(Qt.WA_StyledBackground, True)
+
