@@ -1,11 +1,12 @@
 import threading
 import xml.etree.ElementTree as ET
 import logging
+import json
 
 from PyQt5.QtCore import (QObject, pyqtSignal)
 from Utils.Helper import singleton, runThread
 from Utils.Constant  import *
-from Utils.SignatureVerifier  import verify_xml_signature
+from Utils.signature_verifier.SignatureVerifier import verify_multi_signature
 
 @singleton
 class XmlReader(QObject):
@@ -41,8 +42,9 @@ class XmlReader(QObject):
         tableData = self.__getTableData(root)
 
         """ Signature Data """
-        signatureData = verify_xml_signature(path)
+        signatureData = verify_multi_signature(path)
 
+        print(json.dumps(signatureData, indent=4, ensure_ascii=False))
         logging.debug(f"General: {generalData}")
         logging.debug(f"Table: {tableData}")
         logging.info(f"Signature: {signatureData}")
