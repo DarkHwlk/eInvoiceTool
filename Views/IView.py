@@ -5,6 +5,7 @@ from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import (QWidget, QLabel, QTableView, QLineEdit)
 
 from Views.TableWidget import TableWidget
+from Views.BaseViews.DigitalSignatureWidget  import DigitalSignatureWidget
 
 class IView(QObject):
     def __init__(self, parent):
@@ -45,6 +46,8 @@ class IView(QObject):
         
             if isinstance(widget, QLabel) or isinstance(widget, QLineEdit):
                 widget.setText(data)
+            if isinstance(widget, DigitalSignatureWidget):
+                widget.setData(data)
 
     def onCurrentPageUpdated(self, page):
         self._generalWidgets["CurrentPage"].setText(str(page + 1))

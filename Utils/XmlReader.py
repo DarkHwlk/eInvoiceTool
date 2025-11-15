@@ -31,32 +31,26 @@ class XmlReader(QObject):
                 self.__readFinishedCallback = None
  
     def __readFile(self, path):
-        # try:
-        tree = ET.parse(path)
-        root = tree.getroot()
+        try:
+            tree = ET.parse(path)
+            root = tree.getroot()
 
-        """ General Data """
-        generalData = self.__getGeneralData(root, path)
+            """ General Data """
+            generalData = self.__getGeneralData(root, path)
 
-        """ Table Data """
-        tableData = self.__getTableData(root)
+            """ Table Data """
+            tableData = self.__getTableData(root)
 
-        """ Signature Data """
-        signatureData = verify_multi_signature(path)
-
-        print(json.dumps(signatureData, indent=4, ensure_ascii=False))
-        logging.debug(f"General: {generalData}")
-        logging.debug(f"Table: {tableData}")
-        logging.info(f"Signature: {signatureData}")
-        data = {
-            "General": generalData,
-            "Table": tableData,
-            "Signature": signatureData
-        }
-        return data
-        # except Exception as e:
-        #     logging.error(f"Error when read xml file: {path} | error: {e}")
-        #     return {"General": dict(), "Table": list()}
+            logging.debug(f"General: {generalData}")
+            logging.debug(f"Table: {tableData}")
+            data = {
+                "General": generalData,
+                "Table": tableData
+            }
+            return data
+        except Exception as e:
+            logging.error(f"Error when read xml file: {path} | error: {e}")
+            return {"General": dict(),"Table": list()}
 
     def __getGeneralData(self, root, path):
         generalData = dict()
@@ -93,9 +87,12 @@ class XmlReader(QObject):
                     generalData["TToan"]["LTSuat"][subChild.tag] = subChild.text
             generalData["TToan"][child.tag] = child.text
         #DSCKS
-        DSCKS = root.find("DSCKS")
-        for child in DSCKS:
-            generalData["DSCKS"][child.tag] = child
+        signature = verify_multi_signature(path)
+        if "NBan" in signature and signature["NBan"] is not None:
+            generalData["DSCKS"]["NBan"] = json.dumps(signature["NBan"], indent=4, ensure_ascii=False)
+        if "NMua" in signature and signature["NMua"] is not None:
+            generalData["DSCKS"]["NMua"] = json.dumps(signature["NMua"], indent=4, ensure_ascii=False)
+        logging.info(f"Signature: {json.dumps(generalData["DSCKS"], indent=4, ensure_ascii=False)}")#DHUNG
 
         return generalData
 

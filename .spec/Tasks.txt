@@ -1,0 +1,2 @@
+- [BUG] Read a error signature file > signature will be empty
+- [TASK] Add icon check/uncheck in signature
