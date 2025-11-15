@@ -46,59 +46,61 @@ def _verify_single_signature(root_element: etree._Element, signature_node: etree
         return result
         
     # KIỂM TRA TÍNH XÁC THỰC (SIGNATURE)
-    if digest_valid:
-        try:
-            signature_value = signature_node.find('./ds:SignatureValue', NS).text
-            signature_bytes = base64.b64decode(signature_value)
-            signed_info_node = signature_node.find('./ds:SignedInfo', NS)
-            
-            # CHUẨN HÓA C14N CHO SignedInfo (DÙNG EXCLUSIVE C14N)
-            signed_info_copy = signed_info_node.xpath('.', namespaces=NS)[0]
-            
-            c14n_signed_info_xml = etree.tostring(
-                signed_info_copy, 
-                method='c14n', 
-                exclusive=True, 
-                with_comments=False
-            )
-            
-            # Trích xuất Public Key và thông tin chứng thư
-            cert_b64 = signature_node.find('.//ds:X509Certificate', NS).text
-            cert_der = base64.b64decode(cert_b64)
-            certificate = load_der_x509_certificate(cert_der, default_backend())
-            public_key = certificate.public_key()
-            
-            # Lấy thời gian ký (SigningTime)
-            xpath_signing_time = './/ds:Object//*[local-name()="SigningTime"]'
-            signing_time_nodes = signature_node.xpath(xpath_signing_time, namespaces=NS)
-            
-            if signing_time_nodes:
-                result['SigningTime'] = signing_time_nodes[0].text
-            
-            # Lưu thông tin chứng thư
-            result['certificate_info'] = {
-                "subject": certificate.subject.rfc4514_string(),
-                "issuer": certificate.issuer.rfc4514_string(),
-                "not_valid_before": certificate.not_valid_before_utc.isoformat(),
-                "not_valid_after": certificate.not_valid_after_utc.isoformat(),
-            }
-
-            # Xác minh chữ ký (SHA1)
-            public_key.verify(signature_bytes, c14n_signed_info_xml, padding.PKCS1v15(), hashes.SHA1())
-            result['signature_check']['valid'] = True
-            result['signature_check']['error_detail'] = None
-            
-        except InvalidSignature as e:
-            error_msg = str(e) if str(e) else "Invalid Signature (Verification Failed)"
-            result['signature_check']['error_detail'] = error_msg
-            result['signature_check']['valid'] = False
-        except Exception as e:
-            error_msg = str(e) if str(e) else type(e).__name__
-            result['signature_check']['error_detail'] = f"Lỗi khác: {error_msg}"
-            result['signature_check']['valid'] = False
-        
-    else:
+    if not digest_valid:
         result['signature_check']['error_detail'] = "Xác minh THẤT BẠI. Dữ liệu đã bị SỬA ĐỔI (Digest không hợp lệ)."
+    
+    try:
+        signature_value = signature_node.find('./ds:SignatureValue', NS).text
+        signature_bytes = base64.b64decode(signature_value)
+        signed_info_node = signature_node.find('./ds:SignedInfo', NS)
+        
+        # CHUẨN HÓA C14N CHO SignedInfo (DÙNG EXCLUSIVE C14N)
+        signed_info_copy = signed_info_node.xpath('.', namespaces=NS)[0]
+        
+        c14n_signed_info_xml = etree.tostring(
+            signed_info_copy, 
+            method='c14n', 
+            exclusive=True, 
+            with_comments=False
+        )
+        
+        # Trích xuất Public Key và thông tin chứng thư
+        cert_b64 = signature_node.find('.//ds:X509Certificate', NS).text
+        cert_der = base64.b64decode(cert_b64)
+        certificate = load_der_x509_certificate(cert_der, default_backend())
+        public_key = certificate.public_key()
+        
+        # Lấy thời gian ký (SigningTime)
+        xpath_signing_time = './/ds:Object//*[local-name()="SigningTime"]'
+        signing_time_nodes = signature_node.xpath(xpath_signing_time, namespaces=NS)
+        
+        if signing_time_nodes:
+            result['SigningTime'] = signing_time_nodes[0].text
+        
+        # Lưu thông tin chứng thư
+        result['certificate_info'] = {
+            "subject": certificate.subject.rfc4514_string(),
+            "issuer": certificate.issuer.rfc4514_string(),
+            "not_valid_before": certificate.not_valid_before_utc.isoformat(),
+            "not_valid_after": certificate.not_valid_after_utc.isoformat(),
+        }
+        print("DHUNG: ***************************************")
+        print(result)
+        print("DHUNG: ***************************************")
+
+        # Xác minh chữ ký (SHA1)
+        public_key.verify(signature_bytes, c14n_signed_info_xml, padding.PKCS1v15(), hashes.SHA1())
+        result['signature_check']['valid'] = True
+        result['signature_check']['error_detail'] = None
+        
+    except InvalidSignature as e:
+        error_msg = str(e) if str(e) else "Invalid Signature (Verification Failed)"
+        result['signature_check']['error_detail'] = error_msg
+        result['signature_check']['valid'] = False
+    except Exception as e:
+        error_msg = str(e) if str(e) else type(e).__name__
+        result['signature_check']['error_detail'] = f"Lỗi khác: {error_msg}"
+        result['signature_check']['valid'] = False
 
     return result
 

@@ -58,9 +58,11 @@ class DigitalSignatureWidget(QWidget):
         if isValid:
             self._bgColor = "#dff0d8"
             self._verifyLabel.setText("SIGNATURE VALID")
+            self._verifyLabel.setStyleSheet("color: green;")
         else:
             self._bgColor = "#f8a5c2"
             self._verifyLabel.setText("SIGNATURE INVALID")
+            self._verifyLabel.setStyleSheet("color: red;")
         if self._nameLabel.text() == "Ký bởi: <b></b>":
             self._bgColor = "#ffffff"
             self._verifyLabel.setText("")
@@ -72,7 +74,6 @@ class DigitalSignatureWidget(QWidget):
     
     def initUI(self):
         layoutBuilder = VLayoutBuilder()
-        self._verifyLabel.setStyleSheet("color: red;")
         layoutBuilder.addWidget(self._nameLabel)
         layoutBuilder.addWidget(self._dateLabel)
         layoutBuilder.addWidget(self._verifyLabel, isBold=True)
