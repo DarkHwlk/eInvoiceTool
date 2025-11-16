@@ -9,6 +9,9 @@ ICON_NOK_PATH = RESOURCE_PATH + '/./nok.png'
 ICON_ONE_EXCEL_PATH = RESOURCE_PATH + '/./one_excel_icon.png'
 ICON_EXCEL_PATH = RESOURCE_PATH + '/./excel_icon.png'
 
+ICON_OK_RELATIVE_PATH = "./resources/ok.png"
+ICON_NOK_RELATIVE_PATH = "./resources/nok.png"
+
 MIN_LABEL_WIDTH_TEXT = 500
 MIN_LABEL_WIDTH_NUMBER = 500
 MAIN_BUTTON_WIDTH = 200
