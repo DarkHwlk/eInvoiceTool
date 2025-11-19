@@ -41,12 +41,11 @@ class XmlReader(QObject):
             """ Table Data """
             tableData = self.__getTableData(root)
 
-            logging.debug(f"General: {generalData}")
-            logging.debug(f"Table: {tableData}")
             data = {
                 "General": generalData,
                 "Table": tableData
             }
+            logging.info(f"data: {data}")
             return data
         except Exception as e:
             logging.error(f"Error when read xml file: {path} | error: {e}")

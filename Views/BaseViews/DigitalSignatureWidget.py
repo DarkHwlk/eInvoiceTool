@@ -24,7 +24,7 @@ class DigitalSignatureWidget(QWidget):
     
     def setData(self, data: str):
         data = json.loads(data) if data != "" else None
-        logging.info(f"data: {data}")
+        logging.debug(f"data: {data}")
         if data is None:
             self.setName("")
             self.setDate("")
