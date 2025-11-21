@@ -45,72 +45,92 @@ def export_invoice_to_excel(invoice_data, file_name="hoa_don_dien_tu.xlsx"):
     worksheet = workbook.add_worksheet('HoaDon')
     
     # --- Định dạng ---
-    format_base_left = workbook.add_format({'align': 'left', 'valign': 'vcenter', "font_size": 10})
-    format_base_left_wrap = workbook.add_format({'align': 'left', 'valign': 'vcenter', "font_size": 10, 'text_wrap': True})
-    format_base_left_top = workbook.add_format({'align': 'left', 'valign': 'top', "font_size": 10})
-    format_base_left_top_wrap = workbook.add_format({'align': 'left', 'valign': 'top', 'text_wrap': True, "font_size": 10})
-    format_center = workbook.add_format({'align': 'center', 'valign': 'vcenter', "font_size": 10})
-    format_bold_center = workbook.add_format({'bold': True, 'align': 'center', 'valign': 'vcenter', "font_size": 10})
-    format_bold_left = workbook.add_format({'bold': True, 'align': 'left', 'valign': 'vcenter', "font_size": 10})
+    format_base_left = {'align': 'left', 'valign': 'vcenter', "font_size": 10}
+    format_base_left_wrap = {'align': 'left', 'valign': 'vcenter', "font_size": 10, 'text_wrap': True}
+    format_base_left_top = {'align': 'left', 'valign': 'top', "font_size": 10}
+    format_base_left_top_wrap = {'align': 'left', 'valign': 'top', 'text_wrap': True, "font_size": 10}
+    format_center = {'align': 'center', 'valign': 'vcenter', "font_size": 10}
+    format_bold_center = {'bold': True, 'align': 'center', 'valign': 'vcenter', "font_size": 10}
+    format_bold_left = {'bold': True, 'align': 'left', 'valign': 'vcenter', "font_size": 10}
     
-    format_header = workbook.add_format({
+    format_header = {
         'bold': True, 'border': 1, 'align': 'center', 'valign': 'vcenter', 'text_wrap': True, "font_size": 10
-    })
-    format_data_center = workbook.add_format({'border': 1, 'align': 'center', 'valign': 'vcenter', "font_size": 10})
-    format_data_left = workbook.add_format({'border': 1, 'align': 'left', 'valign': 'vcenter', "font_size": 10})
-    format_data_right = workbook.add_format({'border': 1, 'align': 'right', 'valign': 'vcenter', 'num_format': '#,##0', "font_size": 10})
-    format_signature_info = workbook.add_format({'align': 'center', 'italic': True, 'valign': 'vcenter', "font_size": 10})
+    }
+    format_data_center = {'border': 1, 'align': 'center', 'valign': 'vcenter', "font_size": 10}
+    format_data_left = {'border': 1, 'align': 'left', 'valign': 'vcenter', "font_size": 10}
+    format_data_right = {'border': 1, 'align': 'right', 'valign': 'vcenter', 'num_format': '#,##0', "font_size": 10}
+    format_signature_info = {'align': 'center', 'italic': True, 'valign': 'vcenter', "font_size": 10}
 
-    # Cài đặt độ rộng cột
-    # worksheet.set_column('A:A', 5) 
-    # worksheet.set_column('B:B', 35) 
-    # worksheet.set_column('C:C', 10) 
-    # worksheet.set_column('D:D', 10) 
-    # worksheet.set_column('E:E', 15) 
-    # worksheet.set_column('F:F', 20) 
+    format_border = {
+        'top': {'top': 1},
+        'bottom': {'bottom': 1},
+        'left': {'left': 1},
+        'right': {'right': 1},
+        'top_thick': {'top': 2},
+        'bottom_thick': {'bottom': 2}
+    }
 
     # --- TIÊU ĐỀ (Hàng 0-2) ---
     start_row = 0
-    worksheet.merge_range(start_row, 0, start_row, 5, "TÊN CỤC THUẾ:......................................", format_bold_left)
-    worksheet.merge_range(start_row, 6, start_row, 7, f"Mẫu số: 01GTKT3/001", format_base_left)
+    worksheet.set_row(start_row, 25)
+    worksheet.merge_range(start_row, 0, start_row, 5, "TÊN CỤC THUẾ:......................................",\
+        workbook.add_format({**format_bold_left, **format_border['top'], **format_border['left']}))
+    worksheet.merge_range(start_row, 6, start_row, 7, f"Mẫu số: 01GTKT3/001",\
+        workbook.add_format({**format_base_left, **format_border['top'], **format_border['right']}))
 
     start_row += 1
-    worksheet.merge_range(start_row, 0, start_row, 5, tt_chung.get('THDon', 'HÓA ĐƠN').upper(), format_bold_center)
-    worksheet.merge_range(start_row, 6, start_row, 7, f"Ký hiệu: {kh_hieu_clean}", format_base_left)
+    worksheet.merge_range(start_row, 0, start_row, 5, tt_chung.get('THDon', 'HÓA ĐƠN').upper(),\
+        workbook.add_format({**format_bold_center, **format_border['left']}))
+    worksheet.merge_range(start_row, 6, start_row, 7, f"Ký hiệu: {kh_hieu_clean}",\
+        workbook.add_format({**format_base_left, **format_border['right']}))
     
     start_row += 1
-    worksheet.merge_range(start_row, 0, start_row, 5, "Liên 1: Lưu", format_center)
-    worksheet.merge_range(start_row, 6, start_row, 7, f"Số: {so_hd}", format_base_left)
+    worksheet.merge_range(start_row, 0, start_row, 5, "Liên 1: Lưu",\
+        workbook.add_format({**format_center, **format_border['left']}))
+    worksheet.merge_range(start_row, 6, start_row, 7, f"Số: {so_hd}",\
+        workbook.add_format({**format_base_left, **format_border['right']}))
 
     start_row += 1
-    worksheet.merge_range(start_row, 0, start_row, 5, ngay_thang_nam, format_center)
+    worksheet.merge_range(start_row, 0, start_row, 5, ngay_thang_nam,\
+        workbook.add_format({**format_center, **format_border['bottom_thick'], **format_border['left']}))
+    worksheet.merge_range(start_row, 6, start_row, 7, "",\
+        workbook.add_format({**format_border['bottom_thick'], **format_border['right']}))
     
     # --- THÔNG TIN NGƯỜI BÁN ---
     start_row += 1
     worksheet.set_row(start_row, 30)
-    worksheet.merge_range(start_row, 0, start_row, 7, f"Tên người bán: {n_ban.get('Ten', '.................................')}", format_base_left_top_wrap)
+    worksheet.merge_range(start_row, 0, start_row, 7, f"Tên người bán: {n_ban.get('Ten', '.................................')}",\
+        workbook.add_format({**format_base_left_wrap, **format_border['left'], **format_border['right']}))
     start_row += 1
-    worksheet.merge_range(start_row, 0, start_row + 1, 7, f"Mã số thuế: {n_ban.get('MST', 'UNKNOWN!')}", format_base_left_top)
+    worksheet.merge_range(start_row, 0, start_row + 1, 7, f"Mã số thuế: {n_ban.get('MST', 'UNKNOWN!')}",\
+        workbook.add_format({**format_base_left_top, **format_border['left'], **format_border['right']}))
     start_row += 2
     worksheet.set_row(start_row, 30)
-    worksheet.merge_range(start_row, 0, start_row, 7, f"Địa chỉ: {n_ban.get('DChi', '.................................')}", format_base_left_top_wrap)
+    worksheet.merge_range(start_row, 0, start_row, 7, f"Địa chỉ: {n_ban.get('DChi', '.................................')}",\
+        workbook.add_format({**format_base_left_top_wrap, **format_border['left'], **format_border['right']}))
     start_row += 1
     worksheet.set_row(start_row, 30)
-    worksheet.merge_range(start_row, 0, start_row, 4, f"Điện thoại: ...................................................", format_base_left_top_wrap)
-    worksheet.merge_range(start_row, 5, start_row, 7, f"Số tài khoản: .............................", format_base_left_top_wrap)
+    worksheet.merge_range(start_row, 0, start_row, 4, f"Điện thoại: ...................................................",\
+        workbook.add_format({**format_base_left_top_wrap, **format_border['bottom_thick'], **format_border['left']}))
+    worksheet.merge_range(start_row, 5, start_row, 7, f"Số tài khoản: .............................",\
+        workbook.add_format({**format_base_left_top_wrap, **format_border['bottom_thick'], **format_border['right']}))
     
     # --- THÔNG TIN NGƯỜI MUA ---
     start_row += 1
     worksheet.set_row(start_row, 30)
-    worksheet.merge_range(start_row, 0, start_row, 7, f"Tên người mua: {n_mua.get('HVTNMHang', '.................................')}", format_base_left_top_wrap)
+    worksheet.merge_range(start_row, 0, start_row, 7, f"Tên người mua: {n_mua.get('HVTNMHang', '.................................')}",\
+        workbook.add_format({**format_base_left_wrap, **format_border['left'], **format_border['right']}))
     start_row += 1
-    worksheet.merge_range(start_row, 0, start_row + 1, 7, f"Mã số thuế: ................................", format_base_left_top) 
+    worksheet.merge_range(start_row, 0, start_row + 1, 7, f"Mã số thuế: ................................",\
+        workbook.add_format({**format_base_left_top, **format_border['left'], **format_border['right']})) 
     start_row += 2
     worksheet.set_row(start_row, 30)
-    worksheet.merge_range(start_row, 0, start_row, 7, f"Địa chỉ: {n_mua.get('DChi', '.................................')}", format_base_left_top_wrap)
+    worksheet.merge_range(start_row, 0, start_row, 7, f"Địa chỉ: {n_mua.get('DChi', '.................................')}",\
+        workbook.add_format({**format_base_left_top_wrap, **format_border['left'], **format_border['right']}))
     start_row += 1
     worksheet.set_row(start_row, 30)
-    worksheet.merge_range(start_row, 0, start_row, 7, f"Số tài khoản: .......................................", format_base_left_top_wrap)
+    worksheet.merge_range(start_row, 0, start_row, 7, f"Số tài khoản: .......................................",\
+        workbook.add_format({**format_base_left_top_wrap, **format_border['bottom_thick'], **format_border['left'], **format_border['right']}))
     
     # --- BẢNG CHI TIẾT HÀNG HÓA ---
     start_row += 1
@@ -127,10 +147,10 @@ def export_invoice_to_excel(invoice_data, file_name="hoa_don_dien_tu.xlsx"):
     for i, title in enumerate(headers_main):
         col = i if i < 2 else i + 2
         if i == 1:
-            worksheet.merge_range(header_row, col, header_row, col+2, title, format_header)
-            worksheet.merge_range(header_row + 1, col, header_row + 1, col+2, headers_sub[i], format_header)
-        worksheet.write(header_row, col, title, format_header)
-        worksheet.write(header_row + 1, col, headers_sub[i], format_header)
+            worksheet.merge_range(header_row, col, header_row, col+2, title, workbook.add_format(format_header))
+            worksheet.merge_range(header_row + 1, col, header_row + 1, col+2, headers_sub[i], workbook.add_format(format_header))
+        worksheet.write(header_row, col, title, workbook.add_format(format_header))
+        worksheet.write(header_row + 1, col, headers_sub[i], workbook.add_format(format_header))
     
     # Ghi dữ liệu chi tiết
     data_row = header_row + 2
@@ -138,67 +158,79 @@ def export_invoice_to_excel(invoice_data, file_name="hoa_don_dien_tu.xlsx"):
         sl = int(row['Số lượng'])
         dg = int(row['Đơn giá'])
         tt = int(row['Thành tiền'])
-        worksheet.write(data_row, col_map['STT'], row['STT'], format_data_center)
-        worksheet.merge_range(data_row, col_map['Tên hàng hóa, dịch vụ'], data_row, col_map['Đơn vị tính']-1, row['Tên hàng hóa, dịch vụ'], format_data_left)
-        worksheet.write(data_row, col_map['Đơn vị tính'], row['Đơn vị tính'], format_data_center)
-        worksheet.write(data_row, col_map['Số lượng'], sl, format_data_right)
-        worksheet.write(data_row, col_map['Đơn giá'], dg, format_data_right)
-        worksheet.write(data_row, col_map['Thành tiền'], tt, format_data_right)
+        worksheet.write(data_row, col_map['STT'], row['STT'], workbook.add_format(format_data_center))
+        worksheet.merge_range(data_row, col_map['Tên hàng hóa, dịch vụ'], data_row,\
+            col_map['Đơn vị tính']-1, row['Tên hàng hóa, dịch vụ'],\
+            workbook.add_format(format_data_left))
+        worksheet.write(data_row, col_map['Đơn vị tính'], row['Đơn vị tính'], workbook.add_format(format_data_center))
+        worksheet.write(data_row, col_map['Số lượng'], sl, workbook.add_format(format_data_right))
+        worksheet.write(data_row, col_map['Đơn giá'], dg, workbook.add_format(format_data_right))
+        worksheet.write(data_row, col_map['Thành tiền'], tt, workbook.add_format(format_data_right))
         data_row += 1
 
     # Thêm dòng trống
     num_empty_rows = max(0, 5 - len(df_items))
     for _ in range(num_empty_rows):
         col = i if i < 2 else i + 2
-        worksheet.write(data_row, 0, '', format_data_center)
-        worksheet.merge_range(data_row, 1, data_row, 3, '', format_header)
-        worksheet.write_row(data_row, 4, [''] * 4, format_data_center) 
+        worksheet.write(data_row, 0, '', workbook.add_format(format_data_center))
+        worksheet.merge_range(data_row, 1, data_row, 3, '', workbook.add_format(format_header))
+        worksheet.write_row(data_row, 4, [''] * 4, workbook.add_format(format_data_center))
         data_row += 1
 
     # --- THÔNG TIN TỔNG CỘNG ---
     
     # Cộng tiền hàng 
     worksheet.set_row(data_row, 25)
-    worksheet.merge_range(data_row, 0, data_row, 7, f"Cộng tiền hàng: {tong_cong_thanh_tien}", format_base_left)
+    worksheet.merge_range(data_row, 0, data_row, 7, f"Cộng tiền hàng: {tong_cong_thanh_tien}",\
+        workbook.add_format({**format_base_left, **format_border['left'], **format_border['right']}))
     data_row += 1
     
     # Thuế suất GTGT & Tiền thuế GTGT
     worksheet.set_row(data_row, 25)
     thue_suat_text = "Thuế suất GTGT: KCT" if thue_suat == 'KCT' else f"Thuế suất GTGT: {thue_suat} %"
     
-    worksheet.merge_range(data_row, 0, data_row, 2, thue_suat_text, format_base_left)
-    worksheet.merge_range(data_row, 3, data_row, 7, f"Tiền thuế GTGT: {tien_thue}", format_base_left)
+    worksheet.merge_range(data_row, 0, data_row, 2, thue_suat_text,\
+        workbook.add_format({**format_base_left, **format_border['left'],  **format_border['bottom_thick']}))
+    worksheet.merge_range(data_row, 3, data_row, 7, f"Tiền thuế GTGT: {tien_thue}",\
+        workbook.add_format({**format_base_left, **format_border['right'],  **format_border['bottom_thick']}))
     data_row += 1
 
     # Tổng cộng tiền thanh toán 
     worksheet.set_row(data_row, 25)
-    worksheet.merge_range(data_row, 0, data_row, 7, f"Tổng cộng tiền thanh toán: {tong_cong_thanh_toan}", format_base_left)
+    worksheet.merge_range(data_row, 0, data_row, 7, f"Tổng cộng tiền thanh toán: {tong_cong_thanh_toan}",\
+        workbook.add_format({**format_base_left, **format_border['left'], **format_border['right'], **format_border['bottom_thick'], **format_border['top_thick']}))
     data_row += 1
 
     # Số tiền viết bằng chữ
     worksheet.set_row(data_row, 25)
-    worksheet.merge_range(data_row, 0, data_row, 7, f"Số tiền viết bằng chữ: {so_tien_bang_chu}", format_base_left_wrap)
+    worksheet.merge_range(data_row, 0, data_row, 7, f"Số tiền viết bằng chữ: {so_tien_bang_chu}",\
+        workbook.add_format({**format_base_left_wrap, **format_border['left'], **format_border['right'], **format_border['bottom_thick']}))
     data_row += 1
     
     # --- CHỮ KÝ ---
-    worksheet.merge_range(data_row, 0, data_row, 2, "NGƯỜI MUA HÀNG", format_bold_center)
-    worksheet.merge_range(data_row, 3, data_row, 7, "NGƯỜI BÁN HÀNG", format_bold_center)
+    worksheet.merge_range(data_row, 0, data_row, 2, "NGƯỜI MUA HÀNG",\
+        workbook.add_format({**format_bold_center, **format_border['left']}))
+    worksheet.merge_range(data_row, 3, data_row, 7, "NGƯỜI BÁN HÀNG",\
+        workbook.add_format({**format_bold_center, **format_border['right']}))
     data_row += 1
     
-    worksheet.merge_range(data_row, 0, data_row, 2, "(Ký, ghi rõ họ, tên)", format_signature_info)
-    worksheet.merge_range(data_row, 3, data_row, 7, "(Ký, đóng dấu, ghi rõ họ, tên)", format_signature_info)
+    worksheet.merge_range(data_row, 0, data_row, 2, "(Ký, ghi rõ họ, tên)",\
+        workbook.add_format({**format_signature_info, **format_border['left']}))
+    worksheet.merge_range(data_row, 3, data_row, 7, "(Ký, đóng dấu, ghi rõ họ, tên)",\
+        workbook.add_format({**format_signature_info, **format_border['right']}))
     data_row += 1
-    worksheet.merge_range(data_row, 0, data_row, 7, "(Cần kiểm tra, đối chiếu khi lập, giao, nhận hóa đơn)", format_signature_info)
+    worksheet.merge_range(data_row, 0, data_row, 7, "(Cần kiểm tra, đối chiếu khi lập, giao, nhận hóa đơn)",\
+        workbook.add_format({**format_signature_info, **format_border['left'], **format_border['right'], **format_border['bottom_thick']}))
     data_row += 2
     
     # --- GHI CHÚ (LIÊN) ---
-    worksheet.merge_range(data_row, 0, data_row, 5, "Ghi chú:", format_bold_left)
+    worksheet.merge_range(data_row, 0, data_row, 5, "Ghi chú:", workbook.add_format(format_bold_left))
     data_row += 1
-    worksheet.merge_range(data_row, 0, data_row, 5, "- Liên 1: Lưu", format_base_left)
+    worksheet.merge_range(data_row, 0, data_row, 5, "- Liên 1: Lưu", workbook.add_format(format_base_left))
     data_row += 1
-    worksheet.merge_range(data_row, 0, data_row, 5, "- Liên 2: Giao người mua", format_base_left)
+    worksheet.merge_range(data_row, 0, data_row, 5, "- Liên 2: Giao người mua", workbook.add_format(format_base_left))
     data_row += 1
-    worksheet.merge_range(data_row, 0, data_row, 5, "- Liên 3: Nội bộ", format_base_left)
+    worksheet.merge_range(data_row, 0, data_row, 5, "- Liên 3: Nội bộ", workbook.add_format(format_base_left))
     
     writer.close()
     print(f"✅ Đã xuất dữ liệu hóa đơn ra file: {file_name}")
