@@ -2,6 +2,34 @@ import pandas as pd
 from datetime import datetime
 import os
 
+DOT_BLANK = '....................................................................'
+
+# --- Định dạng ---
+format_base_left = {'align': 'left', 'valign': 'vcenter', "font_size": 10}
+format_base_left_wrap = {'align': 'left', 'valign': 'vcenter', "font_size": 10, 'text_wrap': True}
+format_base_left_top = {'align': 'left', 'valign': 'top', "font_size": 10}
+format_base_left_top_wrap = {'align': 'left', 'valign': 'top', 'text_wrap': True, "font_size": 10}
+format_center = {'align': 'center', 'valign': 'vcenter', "font_size": 10}
+format_bold_center = {'bold': True, 'align': 'center', 'valign': 'vcenter', "font_size": 10}
+format_bold_left = {'bold': True, 'align': 'left', 'valign': 'vcenter', "font_size": 10}
+
+format_header = {
+    'bold': True, 'border': 1, 'align': 'center', 'valign': 'vcenter', 'text_wrap': True, "font_size": 10
+}
+format_data_center = {'border': 1, 'align': 'center', 'valign': 'vcenter', "font_size": 10}
+format_data_left = {'border': 1, 'align': 'left', 'valign': 'vcenter', "font_size": 10}
+format_data_right = {'border': 1, 'align': 'right', 'valign': 'vcenter', 'num_format': '#,##0', "font_size": 10}
+format_signature_info = {'align': 'center', 'italic': True, 'valign': 'vcenter', "font_size": 10}
+
+format_border = {
+    'top': {'top': 1},
+    'bottom': {'bottom': 1},
+    'left': {'left': 1},
+    'right': {'right': 1},
+    'top_thick': {'top': 2},
+    'bottom_thick': {'bottom': 2}
+}
+
 def export_invoice_to_excel(invoice_data, file_name="hoa_don_dien_tu.xlsx"):
     # --- 1. Chuẩn bị Dữ liệu ---
     general = invoice_data.get('General', {})
@@ -21,9 +49,6 @@ def export_invoice_to_excel(invoice_data, file_name="hoa_don_dien_tu.xlsx"):
     kh_hieu = tt_chung.get('KHHDon', '...')
     so_hd = tt_chung.get('SHDon', '...')
     nlap_str = tt_chung.get('NLap', '20..-..-..')
-    
-    # Xử lý Ký hiệu
-    kh_hieu_clean = kh_hieu.lstrip('1') 
         
     # Xử lý Ngày lập
     try:
@@ -33,47 +58,21 @@ def export_invoice_to_excel(invoice_data, file_name="hoa_don_dien_tu.xlsx"):
         ngay_thang_nam = "Ngày ... tháng ... năm 20..."
 
     # Chuẩn bị giá trị tổng cộng
-    tong_cong_thanh_tien = t_toan.get('TgTCThue', '.................................')
+    tong_cong_thanh_tien = f"{int(t_toan.get('TgTCThue')):,}" if 'TgTCThue' in t_toan else DOT_BLANK
     thue_suat = t_toan.get('LTSuat', {}).get('TSuat', 'KCT') 
-    tien_thue = t_toan.get('TgTThue', '.................................')
-    tong_cong_thanh_toan = t_toan.get('TgTTTBSo', '.................................')
-    so_tien_bang_chu = t_toan.get('TgTTTBChu', '.................................')
+    tien_thue = f"{int(t_toan.get('TgTThue')):,}" if 'TgTThue' in t_toan else DOT_BLANK
+    tong_cong_thanh_toan = f"{int(t_toan.get('TgTTTBSo')):,}" if 'TgTTTBSo' in t_toan else DOT_BLANK
+    so_tien_bang_chu = t_toan.get('TgTTTBChu', DOT_BLANK)
     
     # --- 2. Ghi ra Excel ---
     writer = pd.ExcelWriter(file_name, engine='xlsxwriter')
     workbook = writer.book
     worksheet = workbook.add_worksheet('HoaDon')
-    
-    # --- Định dạng ---
-    format_base_left = {'align': 'left', 'valign': 'vcenter', "font_size": 10}
-    format_base_left_wrap = {'align': 'left', 'valign': 'vcenter', "font_size": 10, 'text_wrap': True}
-    format_base_left_top = {'align': 'left', 'valign': 'top', "font_size": 10}
-    format_base_left_top_wrap = {'align': 'left', 'valign': 'top', 'text_wrap': True, "font_size": 10}
-    format_center = {'align': 'center', 'valign': 'vcenter', "font_size": 10}
-    format_bold_center = {'bold': True, 'align': 'center', 'valign': 'vcenter', "font_size": 10}
-    format_bold_left = {'bold': True, 'align': 'left', 'valign': 'vcenter', "font_size": 10}
-    
-    format_header = {
-        'bold': True, 'border': 1, 'align': 'center', 'valign': 'vcenter', 'text_wrap': True, "font_size": 10
-    }
-    format_data_center = {'border': 1, 'align': 'center', 'valign': 'vcenter', "font_size": 10}
-    format_data_left = {'border': 1, 'align': 'left', 'valign': 'vcenter', "font_size": 10}
-    format_data_right = {'border': 1, 'align': 'right', 'valign': 'vcenter', 'num_format': '#,##0', "font_size": 10}
-    format_signature_info = {'align': 'center', 'italic': True, 'valign': 'vcenter', "font_size": 10}
-
-    format_border = {
-        'top': {'top': 1},
-        'bottom': {'bottom': 1},
-        'left': {'left': 1},
-        'right': {'right': 1},
-        'top_thick': {'top': 2},
-        'bottom_thick': {'bottom': 2}
-    }
 
     # --- TIÊU ĐỀ (Hàng 0-2) ---
     start_row = 0
     worksheet.set_row(start_row, 25)
-    worksheet.merge_range(start_row, 0, start_row, 5, "TÊN CỤC THUẾ:......................................",\
+    worksheet.merge_range(start_row, 0, start_row, 5, f"TÊN CỤC THUẾ: {DOT_BLANK}",\
         workbook.add_format({**format_bold_left, **format_border['top'], **format_border['left']}))
     worksheet.merge_range(start_row, 6, start_row, 7, f"Mẫu số: 01GTKT3/001",\
         workbook.add_format({**format_base_left, **format_border['top'], **format_border['right']}))
@@ -81,7 +80,7 @@ def export_invoice_to_excel(invoice_data, file_name="hoa_don_dien_tu.xlsx"):
     start_row += 1
     worksheet.merge_range(start_row, 0, start_row, 5, tt_chung.get('THDon', 'HÓA ĐƠN').upper(),\
         workbook.add_format({**format_bold_center, **format_border['left']}))
-    worksheet.merge_range(start_row, 6, start_row, 7, f"Ký hiệu: {kh_hieu_clean}",\
+    worksheet.merge_range(start_row, 6, start_row, 7, f"Ký hiệu: {kh_hieu}",\
         workbook.add_format({**format_base_left, **format_border['right']}))
     
     start_row += 1
@@ -99,37 +98,37 @@ def export_invoice_to_excel(invoice_data, file_name="hoa_don_dien_tu.xlsx"):
     # --- THÔNG TIN NGƯỜI BÁN ---
     start_row += 1
     worksheet.set_row(start_row, 30)
-    worksheet.merge_range(start_row, 0, start_row, 7, f"Tên người bán: {n_ban.get('Ten', '.................................')}",\
+    worksheet.merge_range(start_row, 0, start_row, 7, f"Tên người bán: {n_ban.get('Ten', DOT_BLANK)}",\
         workbook.add_format({**format_base_left_wrap, **format_border['left'], **format_border['right']}))
     start_row += 1
     worksheet.merge_range(start_row, 0, start_row + 1, 7, f"Mã số thuế: {n_ban.get('MST', 'UNKNOWN!')}",\
         workbook.add_format({**format_base_left_top, **format_border['left'], **format_border['right']}))
     start_row += 2
     worksheet.set_row(start_row, 30)
-    worksheet.merge_range(start_row, 0, start_row, 7, f"Địa chỉ: {n_ban.get('DChi', '.................................')}",\
+    worksheet.merge_range(start_row, 0, start_row, 7, f"Địa chỉ: {n_ban.get('DChi', DOT_BLANK)}",\
         workbook.add_format({**format_base_left_top_wrap, **format_border['left'], **format_border['right']}))
     start_row += 1
     worksheet.set_row(start_row, 30)
-    worksheet.merge_range(start_row, 0, start_row, 4, f"Điện thoại: ...................................................",\
-        workbook.add_format({**format_base_left_top_wrap, **format_border['bottom_thick'], **format_border['left']}))
-    worksheet.merge_range(start_row, 5, start_row, 7, f"Số tài khoản: .............................",\
-        workbook.add_format({**format_base_left_top_wrap, **format_border['bottom_thick'], **format_border['right']}))
+    worksheet.merge_range(start_row, 0, start_row, 3, f"Điện thoại: {DOT_BLANK}",\
+        workbook.add_format({**format_base_left_top, **format_border['bottom_thick'], **format_border['left']}))
+    worksheet.merge_range(start_row, 4, start_row, 7, f"Số tài khoản: {DOT_BLANK}",\
+        workbook.add_format({**format_base_left_top, **format_border['bottom_thick'], **format_border['right']}))
     
     # --- THÔNG TIN NGƯỜI MUA ---
     start_row += 1
     worksheet.set_row(start_row, 30)
-    worksheet.merge_range(start_row, 0, start_row, 7, f"Tên người mua: {n_mua.get('HVTNMHang', '.................................')}",\
+    worksheet.merge_range(start_row, 0, start_row, 7, f"Tên người mua: {n_mua.get('HVTNMHang', DOT_BLANK)}",\
         workbook.add_format({**format_base_left_wrap, **format_border['left'], **format_border['right']}))
     start_row += 1
-    worksheet.merge_range(start_row, 0, start_row + 1, 7, f"Mã số thuế: ................................",\
+    worksheet.merge_range(start_row, 0, start_row + 1, 7, f"Mã số thuế: {DOT_BLANK}",\
         workbook.add_format({**format_base_left_top, **format_border['left'], **format_border['right']})) 
     start_row += 2
     worksheet.set_row(start_row, 30)
-    worksheet.merge_range(start_row, 0, start_row, 7, f"Địa chỉ: {n_mua.get('DChi', '.................................')}",\
+    worksheet.merge_range(start_row, 0, start_row, 7, f"Địa chỉ: {n_mua.get('DChi', DOT_BLANK)}",\
         workbook.add_format({**format_base_left_top_wrap, **format_border['left'], **format_border['right']}))
     start_row += 1
     worksheet.set_row(start_row, 30)
-    worksheet.merge_range(start_row, 0, start_row, 7, f"Số tài khoản: .......................................",\
+    worksheet.merge_range(start_row, 0, start_row, 7, f"Số tài khoản: {DOT_BLANK}",\
         workbook.add_format({**format_base_left_top_wrap, **format_border['bottom_thick'], **format_border['left'], **format_border['right']}))
     
     # --- BẢNG CHI TIẾT HÀNG HÓA ---
@@ -169,7 +168,7 @@ def export_invoice_to_excel(invoice_data, file_name="hoa_don_dien_tu.xlsx"):
         data_row += 1
 
     # Thêm dòng trống
-    num_empty_rows = max(0, 5 - len(df_items))
+    num_empty_rows = max(0, 6 - len(df_items))
     for _ in range(num_empty_rows):
         col = i if i < 2 else i + 2
         worksheet.write(data_row, 0, '', workbook.add_format(format_data_center))
@@ -182,7 +181,7 @@ def export_invoice_to_excel(invoice_data, file_name="hoa_don_dien_tu.xlsx"):
     # Cộng tiền hàng 
     worksheet.set_row(data_row, 25)
     worksheet.merge_range(data_row, 0, data_row, 7, f"Cộng tiền hàng: {tong_cong_thanh_tien}",\
-        workbook.add_format({**format_base_left, **format_border['left'], **format_border['right']}))
+        workbook.add_format({**format_base_left, **format_border['left'], **format_border['right'], **format_border['top_thick'], **format_border['bottom_thick']}))
     data_row += 1
     
     # Thuế suất GTGT & Tiền thuế GTGT
@@ -198,7 +197,7 @@ def export_invoice_to_excel(invoice_data, file_name="hoa_don_dien_tu.xlsx"):
     # Tổng cộng tiền thanh toán 
     worksheet.set_row(data_row, 25)
     worksheet.merge_range(data_row, 0, data_row, 7, f"Tổng cộng tiền thanh toán: {tong_cong_thanh_toan}",\
-        workbook.add_format({**format_base_left, **format_border['left'], **format_border['right'], **format_border['bottom_thick'], **format_border['top_thick']}))
+        workbook.add_format({**format_base_left, **format_border['left'], **format_border['right'], **format_border['top_thick']}))
     data_row += 1
 
     # Số tiền viết bằng chữ
